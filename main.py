@@ -9,8 +9,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+from tensorflow.python.keras import Sequential
+from tensorflow.python.keras.layers import Dense
+from tensorflow.python.keras.layers import Dropout
 
-df = pd.read_csv('creditcardoriginal.csv')
+
+df = pd.read_csv('DSIP\creditcardoriginal.csv')
 
 RegionDict = {0: 'Western Europe', 1: 'Eastern Europe', 2:'Northern Europe', 3: 'Southern Europe'}
 
@@ -163,3 +167,28 @@ X_train, X_test, y_train, y_test = split_data(df)
 y_pred, y_pred_prob = get_predictions(RandomForestClassifier(max_depth=2, random_state=0), X_train, y_train, X_test)
 print_scores(y_test,y_pred,y_pred_prob)
 
+### DNN implementation
+
+# https://towardsdatascience.com/credit-card-fraud-detection-9bc8db79b956
+
+#Split the data
+y = df['Class'] #target
+
+# remove column Class (axis =1 ) 
+X = df.drop(['Class'],axis=1).values #features
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 0)
+
+model = Sequential([
+    Dense(input_dim = 32, units = 16, activation = 'relu'),
+    Dense(units = 24, activation = 'relu'),
+    Dropout(0.5),
+    Dense(units = 20, activation = 'relu'),
+    Dense(units = 24, activation = 'relu'),
+    Dense(units =1, activation = 'sigmoid'),])
+
+model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+model.fit(X_train, y_train, batch_size = 15, epochs = 5)
+
+score = model.evaluate(X_test, y_test)
+print(score)
