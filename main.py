@@ -47,8 +47,6 @@ print(df.head(20))
 
 print(df.info())
 
-# # print(Education[df['Education'][0]])
-
 # Histogram Time
 
 fig = px.histogram(df, x="Time",
@@ -116,8 +114,7 @@ def split_data(df):
 
 
 def get_predictions(clf, X_train, y_train, X_test):
-    # # create classifier
-    # clf = clf
+    # clasifier sent as a parameter 
     # fit it to training data
     clf.fit(X_train,y_train)
     # predict using test data
